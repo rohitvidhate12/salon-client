@@ -32,6 +32,7 @@ const names = [
   "Pre-Bridal Grooming",
   "Manicures & Pedicures",
   "Massage",
+  "Spa",
 ];
 const userSchema = yup.object({
   firstName: yup
