@@ -4,8 +4,9 @@ import Home from "../Home/home";
 import Services from "../Services/services";
 import ContactUs from "../Contact us/contactUs";
 import AboutUs from "../About Us/aboutUs";
-import Login from "../Login/login";
-import Navbar from "../navbar/navbar";
+import Navbar from "../navbar/nav";
+import Career from "../Career/career";
+import SignIn from "../Login/signIn";
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -15,29 +16,72 @@ const Dashboard = () => {
   };
 
   const ProtectedRoute = ({ children }) => {
-    return isAuthenticated ? children : <Navigate to="/login" />;
+    return isAuthenticated ? (
+      children
+    ) : (
+      <SignIn setLoggedIn={setLoggedIn} isAuthenticated={isAuthenticated} />
+    );
   };
   return (
     <>
       <Navbar setLoggedIn={setLoggedIn} isAuthenticated={isAuthenticated} />
 
       <Routes>
-        <Route path="" element={<Home />} />
-      </Routes>
-      <Routes>
-        <Route path="/services" element={<Services />} />
-      </Routes>
-      <Routes>
-        <Route path="/aboutUs" element={<AboutUs />} />
-      </Routes>
-      <Routes>
-        <Route path="/contactUs" element={<ContactUs />} />
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
       <Routes>
         <Route
-          path="/login"
+          path="/services"
           element={
-            <Login
+            <ProtectedRoute>
+              <Services />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <AboutUs />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/contact"
+          element={
+            <ProtectedRoute>
+              <ContactUs />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+      <Routes>
+        <Route
+          path="/career"
+          element={
+            <ProtectedRoute>
+              <Career />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+
+      <Routes>
+        <Route
+          path=""
+          element={
+            <SignIn
               setLoggedIn={setLoggedIn}
               isAuthenticated={isAuthenticated}
             />
