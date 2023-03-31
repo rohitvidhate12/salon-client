@@ -54,7 +54,7 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
   };
 
   return (
-    <AppBar position="sticky" sx={{ backgroundColor: "#e3872b" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "rgba(92,64,51,0.4)" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* For Mobile View  */}
