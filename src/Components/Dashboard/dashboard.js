@@ -7,6 +7,7 @@ import AboutUs from "../About Us/aboutUs";
 import Navbar from "../navbar/nav";
 import Career from "../Career/career";
 import SignIn from "../Login/signIn";
+import RegistrationForm from "../Login/RegistrationForm";
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -87,6 +88,9 @@ const Dashboard = () => {
             />
           }
         />
+      </Routes>
+      <Routes>
+        <Route path="/register" element={<RegistrationForm />} />
       </Routes>
     </>
   );
