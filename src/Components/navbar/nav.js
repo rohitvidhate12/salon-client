@@ -64,7 +64,7 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
             alt="Logo"
             src="https://media.istockphoto.com/id/1220134013/vector/s-h.jpg?s=612x612&w=0&k=20&c=FkvOnhQmfTV-4JJxkVUpYIaswj3iplKQ3J1lGM5vsTA="
           />
-          <Typography
+          {/* <Typography
             variant="h6"
             noWrap
             component="a"
@@ -78,9 +78,7 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
               color: "inherit",
               textDecoration: "none",
             }}
-          >
-            Apple
-          </Typography>
+          ></Typography> */}
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
