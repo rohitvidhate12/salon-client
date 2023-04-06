@@ -8,10 +8,32 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { Card } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const theme = createTheme();
+const registrationSchema = yup.object({
+  firstName: yup
+    .string()
+    .min(2, "Name is too short!  ")
+    .max(45, "Name is too long!")
+    .required("First Name is reuired"),
+  lastName: yup
+    .string()
+    .min(2, "Name is too short!")
+    .max(45, "Name is too long!")
+    .required("Last Name is reuired"),
+
+  email: yup.string().email().required(),
+  password: yup
+    .string()
+    .required("Password is required!..")
+    .min(6, "Password should contain atleast 6 characters.."),
+});
 
 const RegistrationForm = () => {
+  const validUser = [{ email: "test@gmail.com", pass: "12345678" }];
   const navigate = useNavigate();
   const [clientData, setClientData] = React.useState({
     firstName: "",
@@ -19,15 +41,33 @@ const RegistrationForm = () => {
     email: "",
     password: "",
   });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: clientData,
+    resolver: yupResolver(registrationSchema),
+  });
 
   const handleChange = (e, name) => {
     const { value } = e.target;
     setClientData({ ...clientData, [name]: value });
   };
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    navigate("/home");
+  const handleFormSubmit = (e) => {
+    const newUser = {
+      email: clientData.email,
+      pass: clientData.password,
+    };
+
+    validUser.push(newUser);
+
+    localStorage.setItem("ValidUsersArr", JSON.stringify(validUser));
+
+    console.log("ValidUser :", validUser);
     console.log("CLient Data :", clientData);
+
+    navigate("/home");
   };
 
   return (
@@ -51,7 +91,7 @@ const RegistrationForm = () => {
           >
             <Box
               component="form"
-              onSubmit={handleSubmit}
+              onSubmit={handleSubmit(handleFormSubmit)}
               noValidate
               sx={{ mt: 1 }}
             >
@@ -70,6 +110,9 @@ const RegistrationForm = () => {
                 name="firstName"
                 autoComplete="firstName"
                 autoFocus
+                {...register("firstName")}
+                error={errors.firstName ? true : false}
+                helperText={errors.firstName?.message}
                 // value={clientData.firstName}
                 onChange={(e) => handleChange(e, "firstName")}
               />
@@ -82,6 +125,9 @@ const RegistrationForm = () => {
                 name="lastName"
                 autoComplete="lastName"
                 autoFocus
+                {...register("lastName")}
+                error={errors.lastName ? true : false}
+                helperText={errors.lastName?.message}
                 // value={clientData.lastName}
                 onChange={(e) => handleChange(e, "lastName")}
               />
@@ -94,6 +140,9 @@ const RegistrationForm = () => {
                 name="email"
                 autoComplete="email"
                 autoFocus
+                {...register("email")}
+                error={errors.email ? true : false}
+                helperText={errors.email?.message}
                 // value={clientData.email}
                 onChange={(e) => handleChange(e, "email")}
               />
@@ -106,6 +155,9 @@ const RegistrationForm = () => {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                {...register("password")}
+                error={errors.password ? true : false}
+                helperText={errors.password?.message}
                 // value={clientData.password}
                 onChange={(e) => handleChange(e, "password")}
               />
