@@ -8,6 +8,8 @@ import Navbar from "../navbar/nav";
 import Career from "../Career/career";
 import SignIn from "../Login/signIn";
 import RegistrationForm from "../Login/RegistrationForm";
+import JobForm from "../Career/JobForm";
+import EnquiryForm from "../BookAppointment/EnquiryForm";
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -28,59 +30,24 @@ const Dashboard = () => {
       <Navbar setLoggedIn={setLoggedIn} isAuthenticated={isAuthenticated} />
 
       <Routes>
-        <Route
-          path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="" element={<Home />} />
       </Routes>
       <Routes>
-        <Route
-          path="/services"
-          element={
-            <ProtectedRoute>
-              <Services />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/services" element={<Services />} />
       </Routes>
       <Routes>
-        <Route
-          path="/about"
-          element={
-            <ProtectedRoute>
-              <AboutUs />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/about" element={<AboutUs />} />
       </Routes>
       <Routes>
-        <Route
-          path="/contact"
-          element={
-            <ProtectedRoute>
-              <ContactUs />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/contact" element={<ContactUs />} />
       </Routes>
       <Routes>
-        <Route
-          path="/career"
-          element={
-            <ProtectedRoute>
-              <Career />
-            </ProtectedRoute>
-          }
-        />
+        <Route path="/career" element={<Career />} />
       </Routes>
 
       <Routes>
         <Route
-          path=""
+          path="/login"
           element={
             <SignIn
               setLoggedIn={setLoggedIn}
@@ -91,6 +58,19 @@ const Dashboard = () => {
       </Routes>
       <Routes>
         <Route path="/register" element={<RegistrationForm />} />
+      </Routes>
+      <Routes>
+        <Route path="/apply" element={<JobForm />} />
+      </Routes>
+      <Routes>
+        <Route
+          path="/book-appointment"
+          element={
+            <ProtectedRoute>
+              <EnquiryForm />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   );

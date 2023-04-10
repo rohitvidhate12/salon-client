@@ -14,7 +14,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { NavLink, useNavigate } from "react-router-dom";
 
 const pages = [
-  { name: "Home", route: "/home" },
+  { name: "Home", route: "" },
   { name: "About", route: "/about" },
   { name: "Services", route: "/services" },
   { name: "Career", route: "/career" },
@@ -52,17 +52,21 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
     setLoggedIn(false);
     navigate("");
   };
-
+  // rgba(92,64,51,0.4)"
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "rgba(92,64,51,0.4)" }}>
+    <AppBar position="sticky" sx={{ backgroundColor: "white" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* For Mobile View  */}
 
           <Avatar
             sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            alt="Logo"
-            src="https://media.istockphoto.com/id/1220134013/vector/s-h.jpg?s=612x612&w=0&k=20&c=FkvOnhQmfTV-4JJxkVUpYIaswj3iplKQ3J1lGM5vsTA="
+            src="/Images/Logo.jpg"
+            width="60"
+            height="60"
+            className="rounded-5 d-inline-block align-top"
+            alt="React Bootstrap logo"
+            style={{ border: "2px solid black" }}
           />
           {/* <Typography
             variant="h6"
@@ -158,17 +162,15 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
           >
             {pages.map(({ name, route }, i) => (
               <MenuItem key={name + i} onClick={handleCloseNavMenu}>
-                {isAuthenticated && (
-                  <NavLink
-                    to={route}
-                    style={({ isActive }) => ({
-                      ...linkStyle,
-                      color: isActive ? "cyan" : "black",
-                    })}
-                  >
-                    {name}
-                  </NavLink>
-                )}
+                <NavLink
+                  to={route}
+                  style={({ isActive }) => ({
+                    ...linkStyle,
+                    color: isActive ? "cyan" : "black",
+                  })}
+                >
+                  {name}
+                </NavLink>
               </MenuItem>
             ))}
           </Box>

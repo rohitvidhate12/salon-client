@@ -1,0 +1,39 @@
+/* SM Size */
+
+@media (max-width: 576px) {
+  .col {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+}
+
+/* MD Size */
+
+@media (min-width: 577px) and (max-width: 768px) {
+  .col {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+}
+
+/* LG Size  */
+
+@media (min-width: 769px) and (max-width: 992px) {
+  .col {
+    margin-bottom: 15px;
+  }
+}
+
+/* Above LG Size */
+
+@media (min-width: 993px) {
+  .col {
+    margin-bottom: 15px;
+  }
+}

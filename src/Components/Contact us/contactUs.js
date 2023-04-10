@@ -10,6 +10,7 @@ import { Card, Grid } from "@mui/material";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import Footer from "../Footer/Footer";
 const theme = createTheme();
 
 const ContactSchema = yup.object({
@@ -80,9 +81,13 @@ const ContactUs = () => {
             </Typography>
           </Box>
         </Grid>
-        <Grid item xs={12} md={7}>
+        <Grid item xs={12} md={3 / 2}></Grid>
+        <Grid item xs={12} md={11 / 2}>
           <ThemeProvider theme={theme}>
-            <Container component="main" sx={{ ml: 20, width: 600 }}>
+            <Container
+              component="main"
+              //  sx={{ ml: 20, width: 600}}
+            >
               <CssBaseline />
               <Card sx={{ p: 5 }}>
                 <Box
@@ -100,7 +105,7 @@ const ContactUs = () => {
                     </p>
                   </Typography>
                   <Grid container spacing={2}>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         margin="normal"
                         required
@@ -117,7 +122,7 @@ const ContactUs = () => {
                         onChange={(e) => handleChange(e, "firstName")}
                       />
                     </Grid>
-                    <Grid item md={6}>
+                    <Grid item xs={12} md={6}>
                       <TextField
                         margin="normal"
                         required
@@ -220,7 +225,7 @@ const ContactUs = () => {
           </ThemeProvider>
         </Grid>
 
-        <Grid item xs={12} md={5} sx={{ ml: 0, mt: 15 }}>
+        <Grid item xs={12} md={5} sx={{ ml: 0, mt: 15, p: 2 }}>
           <Card sx={{ width: 500, backgroundColor: "#D8F9FF" }}>
             <Grid sx={{ fontSize: 22 }}>
               <h3>OPENING HOURS</h3>
@@ -237,6 +242,9 @@ const ContactUs = () => {
               <p style={{ color: "maroon" }}>Tel: 123-456-7890</p>
             </Grid>
           </Card>
+        </Grid>
+        <Grid sx={{ marginTop: 10 }}>
+          <Footer />
         </Grid>
       </Grid>
     </>

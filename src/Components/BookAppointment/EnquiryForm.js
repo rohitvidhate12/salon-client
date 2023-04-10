@@ -95,6 +95,8 @@ const EnquiryForm = () => {
         sx={{
           border: "1px solid black",
           borderRadius: 10,
+          marginTop: "2%",
+          height: "80vh",
           ml: "16%",
           mr: "16%",
           backgroundImage:

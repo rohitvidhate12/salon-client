@@ -53,7 +53,7 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
 
     // dummy login
     if (user.email === "test@gmail.com" && user.password === "12345") {
-      navigate("/home");
+      navigate("");
       setLoggedIn(true);
     }
     console.log({ user });
@@ -67,7 +67,7 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
         <Grid
           item
           xs={false}
-          sm={4}
+          sm={5}
           md={7}
           sx={{
             backgroundImage:
@@ -85,7 +85,7 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
         <Grid
           item
           xs={12}
-          sm={8}
+          sm={7}
           md={5}
           component={Paper}
           elevation={6}
