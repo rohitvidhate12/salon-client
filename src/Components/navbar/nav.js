@@ -20,6 +20,21 @@ const pages = [
   { name: "Career", route: "/career" },
   { name: "Contact", route: "/contact" },
 ];
+
+const adminRoutes = [
+  {
+    name: "Users",
+    route: "/registered-users",
+  },
+  {
+    name: "Appointments",
+    route: "/appointment-data",
+  },
+  {
+    name: "Employees",
+    route: "/employers-data",
+  },
+];
 // const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 const Navbar = ({ isAuthenticated, setLoggedIn }) => {
@@ -58,32 +73,6 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           {/* For Mobile View  */}
-
-          <Avatar
-            sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
-            src="/Images/Logo.jpg"
-            width="60"
-            height="60"
-            className="rounded-5 d-inline-block align-top"
-            alt="React Bootstrap logo"
-            style={{ border: "2px solid black" }}
-          />
-          {/* <Typography
-            variant="h6"
-            noWrap
-            component="a"
-            href="/"
-            sx={{
-              mr: 2,
-              display: { xs: "none", md: "flex" },
-              fontFamily: "monospace",
-              fontWeight: 700,
-              letterSpacing: ".3rem",
-              color: "inherit",
-              textDecoration: "none",
-            }}
-          ></Typography> */}
-
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
@@ -134,8 +123,10 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
 
           <Avatar
             sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
-            alt="Logo"
-            src="https://media.istockphoto.com/id/1220134013/vector/s-h.jpg?s=612x612&w=0&k=20&c=FkvOnhQmfTV-4JJxkVUpYIaswj3iplKQ3J1lGM5vsTA="
+            src="/Images/Logo.jpg"
+            className="rounded-5 d-inline-block align-top"
+            alt="React Bootstrap logo"
+            style={{ border: "2px solid black" }}
           />
           <Typography
             variant="h5"

@@ -11,6 +11,8 @@ import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import UserService from "../../Services/userServices";
 
 const theme = createTheme();
 const registrationSchema = yup.object({
@@ -26,6 +28,9 @@ const registrationSchema = yup.object({
     .required("Last Name is reuired"),
 
   email: yup.string().email().required(),
+  mobile: yup
+    .string()
+    .matches(/^[\d+]{10}$/, "Please enter valid Mobile Number!"),
   password: yup
     .string()
     .required("Password is required!..")
@@ -33,12 +38,12 @@ const registrationSchema = yup.object({
 });
 
 const RegistrationForm = () => {
-  const validUser = [{ email: "test@gmail.com", pass: "12345678" }];
   const navigate = useNavigate();
   const [clientData, setClientData] = React.useState({
     firstName: "",
     lastName: "",
     email: "",
+    mobile: "",
     password: "",
   });
   const {
@@ -54,20 +59,19 @@ const RegistrationForm = () => {
     const { value } = e.target;
     setClientData({ ...clientData, [name]: value });
   };
-  const handleFormSubmit = (e) => {
-    const newUser = {
-      email: clientData.email,
-      pass: clientData.password,
-    };
-
-    validUser.push(newUser);
-
-    localStorage.setItem("ValidUsersArr", JSON.stringify(validUser));
-
-    console.log("ValidUser :", validUser);
+  const handleFormSubmit = async (e) => {
     console.log("CLient Data :", clientData);
 
-    navigate("/home");
+    UserService.createUser(clientData)
+      .then((response) => {
+        const message = response?.data?.message || "User Created";
+      })
+      .catch((err) => {
+        console.error(err);
+        const message = err?.response?.data?.message || "Failed to create";
+      });
+
+    navigate("/login");
   };
 
   return (
@@ -130,6 +134,20 @@ const RegistrationForm = () => {
                 helperText={errors.lastName?.message}
                 // value={clientData.lastName}
                 onChange={(e) => handleChange(e, "lastName")}
+              />
+              <TextField
+                margin="normal"
+                required
+                fullWidth
+                id="mobile"
+                label="Mobile"
+                name="mobile"
+                autoComplete="mobile"
+                autoFocus
+                {...register("mobile")}
+                error={errors.mobile ? true : false}
+                helperText={errors.mobile?.message}
+                onChange={(e) => handleChange(e, "mobile")}
               />
               <TextField
                 margin="normal"

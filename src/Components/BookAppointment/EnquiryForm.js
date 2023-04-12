@@ -15,6 +15,7 @@ import React, { useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import AppointmentService from "../../Services/appointmentServices";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -86,7 +87,15 @@ const EnquiryForm = () => {
   };
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
+    AppointmentService.createAppointment(userData)
+      .then((response) => {
+        const message = response?.data?.message || "Appointment Created";
+      })
+      .catch((err) => {
+        console.error(err);
+        const message =
+          err?.response?.data?.message || "Failed to create Appointment";
+      });
   };
   console.log("UserData :", userData);
   return (
@@ -94,6 +103,7 @@ const EnquiryForm = () => {
       <Box
         sx={{
           border: "1px solid black",
+          boxSizing: "border-box",
           borderRadius: 10,
           marginTop: "2%",
           height: "80vh",
@@ -114,7 +124,7 @@ const EnquiryForm = () => {
         >
           Contact Us
         </h1>
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
           <Grid container>
             <Grid md={5} sx={{ fontFamily: "'BadScript-Regular', sans-serif" }}>
               <Grid item sx={{ fontSize: 24 }}>
@@ -226,14 +236,14 @@ const EnquiryForm = () => {
                   >
                     <option aria-label="None" value="" />
                     <optgroup label="Morning">
-                      <option value={1}>8AM-10AM</option>
-                      <option value={2}>10AM-12PM</option>
-                      <option value={3}>12PM-2PM</option>
+                      <option value={"8AM-10AM"}>8AM-10AM</option>
+                      <option value={"10AM-12PM"}>10AM-12PM</option>
+                      <option value={"12PM-2PM"}>12PM-2PM</option>
                     </optgroup>
                     <optgroup label="Evening">
-                      <option value={4}>4PM-6PM</option>
-                      <option value={5}>6PM-8PM</option>
-                      <option value={5}>8PM-10PM</option>
+                      <option value={"4PM-6PM"}>4PM-6PM</option>
+                      <option value={"6PM-8PM"}>6PM-8PM</option>
+                      <option value={"8PM-10PM"}>8PM-10PM</option>
                     </optgroup>
                   </Select>
                 </FormControl>
@@ -245,7 +255,7 @@ const EnquiryForm = () => {
               </Grid>
             </Grid>
           </Grid>
-        </form>
+        </Box>
       </Box>
     </section>
   );

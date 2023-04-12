@@ -10,6 +10,9 @@ import SignIn from "../Login/signIn";
 import RegistrationForm from "../Login/RegistrationForm";
 import JobForm from "../Career/JobForm";
 import EnquiryForm from "../BookAppointment/EnquiryForm";
+import AppointmentData from "../../AdminPanel/AppointmentData";
+import EmployersData from "../../AdminPanel/EmployersData";
+import RegisteredUsers from "../../AdminPanel/RegisteredUsers";
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -43,6 +46,15 @@ const Dashboard = () => {
       </Routes>
       <Routes>
         <Route path="/career" element={<Career />} />
+      </Routes>
+      <Routes>
+        <Route path="/appointment-data" element={<AppointmentData />} />
+      </Routes>
+      <Routes>
+        <Route path="/employers-data" element={<EmployersData />} />
+      </Routes>
+      <Routes>
+        <Route path="/registered-users" element={<RegisteredUsers />} />
       </Routes>
 
       <Routes>

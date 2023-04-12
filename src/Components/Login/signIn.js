@@ -13,6 +13,7 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
+import AuthService from "../../Services/authServices";
 
 function Copyright(props) {
   return (
@@ -57,8 +58,45 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
       setLoggedIn(true);
     }
     console.log({ user });
+
+    let responsePro;
+    if (type == "admin") {
+      //admin
+      responsePro = AuthService.adminLogin(user);
+    } else {
+      //student login
+      responsePro = AuthService.studentLogin(user);
+    }
+
+    responsePro
+      .then((response) => {
+        console.log("Response :", response);
+        // save the user data to redux store
+
+        if (response?.data?.data) {
+          dispatch(addUser(response?.data?.data));
+        }
+        //get the token and save in session storage
+
+        sessionStorage.setItem(
+          "accessToken",
+          response.headers["x-accesstoken"]
+        );
+        sessionStorage.setItem(
+          "refreshToken",
+          response.headers["x-refreshtoken"]
+        );
+
+        // navigate to dashboard
+
+        navigate("/services");
+      })
+      .catch((err) => {
+        console.error(err);
+        const message = err?.response?.data?.message || "could not login";
+        errorToast(message);
+      });
   };
-  //   console.log({ isAuthenticated });
 
   return (
     <ThemeProvider theme={theme}>

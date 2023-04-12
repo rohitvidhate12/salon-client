@@ -1,9 +1,10 @@
-import { Button, Container, Grid, TextField } from "@mui/material";
+import { Box, Button, Container, Grid, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import EmployeeService from "../../Services/employeeServices";
 
 const EmployeeSchema = yup.object({
   firstName: yup
@@ -60,21 +61,22 @@ const JobForm = () => {
   };
 
   const handleFormSubmit = (e) => {
-    e.preventDefault();
+    EmployeeService.createEmployee(employeeDetails)
+      .then((response) => {
+        const message = response?.data?.message || "Appointment Created";
+      })
+      .catch((err) => {
+        console.error({ err });
+        const message =
+          err?.response?.data?.message || "Failed to create Appointment";
+      });
+
     navigate("/career");
-    //   const formData = new FormData();
-
-    //   for (let key in employeeDetails) {
-    //     formData.append(key, employeeDetails[key]);
-    //   }
-
-    //   console.log("Employee Details :", formData);
-    //   saveEmployee(formData);
   };
 
   return (
     <>
-      <Container component="form" onSubmit={handleSubmit(handleFormSubmit)}>
+      <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
         <Grid container xs={12}>
           <Grid item xs={12} md={5 / 2}></Grid>
           <Grid
@@ -203,7 +205,7 @@ const JobForm = () => {
             </Grid>
           </Grid>
         </Grid>
-      </Container>
+      </Box>
     </>
   );
 };
