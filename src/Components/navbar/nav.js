@@ -65,7 +65,7 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
   };
   const handleLogout = () => {
     setLoggedIn(false);
-    navigate("");
+    navigate("/login");
   };
   // rgba(92,64,51,0.4)"
   return (
@@ -122,7 +122,12 @@ const Navbar = ({ isAuthenticated, setLoggedIn }) => {
           {/* for desktop view  */}
 
           <Avatar
-            sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            sx={{
+              display: { xs: "flex", md: "none" },
+              mr: 1,
+              height: 50,
+              width: 50,
+            }}
             src="/Images/Logo.jpg"
             className="rounded-5 d-inline-block align-top"
             alt="React Bootstrap logo"

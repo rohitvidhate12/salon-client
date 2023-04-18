@@ -38,7 +38,7 @@ const Career = () => {
           <Grid item xs={12}>
             <Box sx={{ position: "relative" }}>
               <img
-                src="https://images.vouchercart.com/clients/63c1bc98b770b0cf954782df89e0ecb3/pedicure_3388b9c8ff37853efbf67d0b4353ecf09a8a9429_bbdd1cdb07c7c3cc2c960ba16e5f0b00.jpg"
+                src="/Images/career.webp"
                 style={{ height: "80vh", width: "100%" }}
               />
 

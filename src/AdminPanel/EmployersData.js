@@ -8,6 +8,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { useEffect } from "react";
 import { useState } from "react";
+import EditEmployee from "./EditEmployees";
 const EmployersData = () => {
   const defaultUser = () => ({
     firstName: "",
@@ -22,18 +23,19 @@ const EmployersData = () => {
   const [initialData, setInitialData] = useState();
   const [open, setOpen] = useState(false);
   const [operation, setOperation] = useState("edit");
-
+  const [selectedEmployee, setSelectedEmployee] = useState("");
+  const handleDialogClose = () => setOpen(false);
   // const addEmployee = () => {
   //   setOperation("add");
   //   setInitialData(defaultUser());
   //   setOpen(true);
   // };
 
-  // const editEmployee = (user) => {
-  //   setOperation("edit");
-  //   setInitialData(user);
-  //   setOpen(true);
-  // };
+  const editEmployee = (user) => {
+    setOperation("edit");
+    // setInitialData(user);
+    setOpen(true);
+  };
   const deleteEmployee = (id) => {
     Swal.fire({
       title: "Are you sure?",
@@ -74,7 +76,7 @@ const EmployersData = () => {
   const columns = [
     {
       label: "ID",
-      name: "userId",
+      name: "_id",
     },
     {
       label: "Name",
@@ -132,9 +134,9 @@ const EmployersData = () => {
           const user = employeeList[index];
           return (
             <>
-              {/* <IconButton color="primary" onClick={() => editEmployee(user)}>
+              <IconButton color="primary" onClick={() => editEmployee(user)}>
                 <EditIcon />
-              </IconButton> */}
+              </IconButton>
               <IconButton
                 color="error"
                 onClick={() => deleteEmployee(user?._id)}
@@ -150,11 +152,23 @@ const EmployersData = () => {
 
   return (
     <>
+      <EditEmployee
+        open={open}
+        handleDialogClose={handleDialogClose}
+        operation={operation}
+        selectedEmployee={selectedEmployee}
+        employeeList={employeeList}
+      />
       <Box>
         <MuiDatatable
           title="Employees List"
           columns={columns}
           data={employeeList}
+          options={{
+            onRowClick: (roWData, { rowIndex, dataIndex }) => {
+              setSelectedEmployee(roWData[0]);
+            },
+          }}
         />
       </Box>
     </>

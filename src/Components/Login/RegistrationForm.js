@@ -13,6 +13,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import axios from "axios";
 import UserService from "../../Services/userServices";
+import { errorToast, successToast } from "../../Toast/Toast";
+import { useEffect } from "react";
 
 const theme = createTheme();
 const registrationSchema = yup.object({
@@ -37,7 +39,13 @@ const registrationSchema = yup.object({
     .min(6, "Password should contain atleast 6 characters.."),
 });
 
-const RegistrationForm = () => {
+const RegistrationForm = ({
+  open,
+  handleDialogClose,
+  operation,
+  selectedUserToEdit,
+  userList,
+}) => {
   const navigate = useNavigate();
   const [clientData, setClientData] = React.useState({
     firstName: "",
@@ -55,6 +63,15 @@ const RegistrationForm = () => {
     resolver: yupResolver(registrationSchema),
   });
 
+  useEffect(() => {
+    if (userList?.length && selectedUserToEdit) {
+      const selectedUser = userList?.find(
+        (user) => user._id === selectedUserToEdit
+      );
+      setClientData(selectedUser);
+    }
+  }, [selectedUserToEdit, userList]);
+
   const handleChange = (e, name) => {
     const { value } = e.target;
     setClientData({ ...clientData, [name]: value });
@@ -62,14 +79,30 @@ const RegistrationForm = () => {
   const handleFormSubmit = async (e) => {
     console.log("CLient Data :", clientData);
 
-    UserService.createUser(clientData)
-      .then((response) => {
-        const message = response?.data?.message || "User Created";
-      })
-      .catch((err) => {
-        console.error(err);
-        const message = err?.response?.data?.message || "Failed to create";
-      });
+    if ((operation = "edit")) {
+      UserService.updateUser(clientData?._id, clientData)
+        .then((response) => {
+          const message = response?.data?.message || "User Created";
+          successToast(message);
+          if (selectedUserToEdit) handleDialogClose();
+        })
+        .catch((err) => {
+          console.error(err);
+          const message = err?.response?.data?.message || "Failed to create";
+          errorToast(message);
+        });
+    } else {
+      UserService.createUser(clientData)
+        .then((response) => {
+          const message = response?.data?.message || "User Created";
+          successToast(message);
+        })
+        .catch((err) => {
+          console.error(err);
+          const message = err?.response?.data?.message || "Failed to create";
+          errorToast(message);
+        });
+    }
 
     navigate("/login");
   };
@@ -117,8 +150,8 @@ const RegistrationForm = () => {
                 {...register("firstName")}
                 error={errors.firstName ? true : false}
                 helperText={errors.firstName?.message}
-                // value={clientData.firstName}
                 onChange={(e) => handleChange(e, "firstName")}
+                value={clientData.firstName || ""}
               />
               <TextField
                 margin="normal"
@@ -132,7 +165,7 @@ const RegistrationForm = () => {
                 {...register("lastName")}
                 error={errors.lastName ? true : false}
                 helperText={errors.lastName?.message}
-                // value={clientData.lastName}
+                value={clientData.lastName || ""}
                 onChange={(e) => handleChange(e, "lastName")}
               />
               <TextField
@@ -148,6 +181,7 @@ const RegistrationForm = () => {
                 error={errors.mobile ? true : false}
                 helperText={errors.mobile?.message}
                 onChange={(e) => handleChange(e, "mobile")}
+                value={clientData.mobile || ""}
               />
               <TextField
                 margin="normal"
@@ -161,7 +195,7 @@ const RegistrationForm = () => {
                 {...register("email")}
                 error={errors.email ? true : false}
                 helperText={errors.email?.message}
-                // value={clientData.email}
+                value={clientData.email || ""}
                 onChange={(e) => handleChange(e, "email")}
               />
               <TextField
@@ -176,7 +210,7 @@ const RegistrationForm = () => {
                 {...register("password")}
                 error={errors.password ? true : false}
                 helperText={errors.password?.message}
-                // value={clientData.password}
+                value={clientData.password || ""}
                 onChange={(e) => handleChange(e, "password")}
               />
 
@@ -186,7 +220,7 @@ const RegistrationForm = () => {
                 variant="text"
                 sx={{ mt: 4, mb: 0, fontSize: 18 }}
               >
-                Register
+                {(operation = "edit" ? "Edit" : "Register")}
               </Button>
             </Box>
           </Card>

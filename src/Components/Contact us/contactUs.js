@@ -11,6 +11,8 @@ import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Footer from "../Footer/Footer";
+import EnquiryService from "../../Services/enquiryServices";
+import { errorToast, successToast } from "../../Toast/Toast";
 const theme = createTheme();
 
 const ContactSchema = yup.object({
@@ -54,23 +56,37 @@ const ContactUs = () => {
     const { value } = e.target;
     setContactData({ ...contactData, [name]: value });
   };
-  const handleFormSubmit = (e) => {};
+  const handleFormSubmit = (e) => {
+    EnquiryService.createEnquiry(contactData)
+      .then((response) => {
+        const message = response?.data?.message || "Enquiry Created";
+        successToast(message);
+      })
+      .catch((err) => {
+        console.error(err);
+        const message = err?.response?.data?.message || "Failed to create";
+        errorToast(message);
+      });
+  };
 
   console.log({ contactData });
   return (
     <>
       <Grid container>
-        <Grid item md={12}>
+        <Grid item xs={12} md={12}>
           <Box sx={{ position: "relative" }}>
             <img
-              src="https://linnaean.imgix.net/190905_Linnaean17344-D.jpeg?auto=compress&fit=clip&q=80&w=4000&s=2b6dd7c032bc720d4f9e262c1ca38922"
-              style={{ height: "100vh", width: "100%" }}
+              src="/Images/contact.jpeg"
+              style={{
+                height: "90vh",
+                width: "100%",
+              }}
             />
             <Typography
               sx={{
                 color: "#08c7ea",
                 position: "absolute",
-                fontSize: 80,
+                fontSize: { xs: 40, md: 80 },
                 top: "81%",
                 left: "50%",
                 transform: "translate(-50%, -50%)",
@@ -226,7 +242,13 @@ const ContactUs = () => {
         </Grid>
 
         <Grid item xs={12} md={5} sx={{ ml: 0, mt: 15, p: 2 }}>
-          <Card sx={{ width: 500, backgroundColor: "#D8F9FF" }}>
+          <Card
+            sx={{
+              width: { xs: 450, md: 500 },
+              backgroundColor: "#D8F9FF",
+              p: 2,
+            }}
+          >
             <Grid sx={{ fontSize: 22 }}>
               <h3>OPENING HOURS</h3>
               <p style={{ color: "maroon" }}>Mon - Fri: 7am - 10pm</p>
@@ -234,7 +256,14 @@ const ContactUs = () => {
               <p style={{ color: "maroon" }}>​Sunday: 8am - 11pm</p>
             </Grid>
           </Card>
-          <Card sx={{ mt: 5, width: 500, backgroundColor: "#FFF5CC" }}>
+          <Card
+            sx={{
+              mt: 5,
+              width: { xs: 450, md: 500 },
+              backgroundColor: "#FFF5CC",
+              p: 2,
+            }}
+          >
             <Grid sx={{ fontSize: 20 }}>
               <h3>OUR ADDRESS</h3>
               <p style={{ color: "maroon" }}>500 Terry Francine Street</p>

@@ -1,10 +1,11 @@
 import { Box, Button, Container, Grid, TextField } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
 import EmployeeService from "../../Services/employeeServices";
+import { errorToast, successToast } from "../../Toast/Toast";
 
 const EmployeeSchema = yup.object({
   firstName: yup
@@ -26,7 +27,14 @@ const EmployeeSchema = yup.object({
   startDate: yup.string().required(),
 });
 
-const JobForm = () => {
+const JobForm = ({
+  open,
+  handleDialogClose,
+  operation,
+  employeeList,
+  selectedEmployee,
+  isDialog = false,
+}) => {
   const navigate = useNavigate();
   const [employeeDetails, setEmployeeDetails] = useState({
     firstName: "",
@@ -46,6 +54,15 @@ const JobForm = () => {
     resolver: yupResolver(EmployeeSchema),
   });
 
+  useEffect(() => {
+    if (employeeList?.length && selectedEmployee) {
+      const selectedUser = employeeList?.find(
+        (user) => user._id === selectedEmployee
+      );
+      setEmployeeDetails(selectedUser);
+    }
+  }, [selectedEmployee, employeeList]);
+
   const handleChange = (e, name) => {
     console.log({ e, name });
     const { value } = e.target;
@@ -61,15 +78,29 @@ const JobForm = () => {
   };
 
   const handleFormSubmit = (e) => {
-    EmployeeService.createEmployee(employeeDetails)
-      .then((response) => {
-        const message = response?.data?.message || "Appointment Created";
-      })
-      .catch((err) => {
-        console.error({ err });
-        const message =
-          err?.response?.data?.message || "Failed to create Appointment";
-      });
+    if ((operation = "edit")) {
+      EmployeeService.updateEmployee(employeeList?._id, employeeList)
+        .then((response) => {
+          const message = response?.data?.message || "User Created";
+          successToast(message);
+          handleDialogClose();
+        })
+        .catch((err) => {
+          console.error(err);
+          const message = err?.response?.data?.message || "Failed to create";
+          errorToast(message);
+        });
+    } else {
+      EmployeeService.createEmployee(employeeDetails)
+        .then((response) => {
+          const message = response?.data?.message || "Appointment Created";
+        })
+        .catch((err) => {
+          console.error({ err });
+          const message =
+            err?.response?.data?.message || "Failed to create Appointment";
+        });
+    }
 
     navigate("/career");
   };
@@ -86,7 +117,7 @@ const JobForm = () => {
             spacing={4}
             sx={{ marginTop: 10, border: "1px solid black", padding: 3 }}
           >
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="firstName"
@@ -95,12 +126,13 @@ const JobForm = () => {
                 type="text"
                 variant="outlined"
                 {...register("firstName")}
+                value={employeeDetails.firstName}
                 error={errors.firstName ? true : false}
                 helperText={errors.firstName?.message}
                 onChange={(event) => handleChange(event, "firstName")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="lastName"
@@ -109,12 +141,13 @@ const JobForm = () => {
                 type="text"
                 variant="outlined"
                 {...register("lastName")}
+                value={employeeDetails.lastName}
                 error={errors.lastName ? true : false}
                 helperText={errors.lastName?.message}
                 onChange={(event) => handleChange(event, "lastName")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="email"
@@ -123,12 +156,13 @@ const JobForm = () => {
                 type="text"
                 variant="outlined"
                 {...register("email")}
+                value={employeeDetails.email}
                 error={errors.email ? true : false}
                 helperText={errors.email?.message}
                 onChange={(event) => handleChange(event, "email")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="mobile"
@@ -137,12 +171,13 @@ const JobForm = () => {
                 type="number"
                 variant="outlined"
                 {...register("mobile")}
+                value={employeeDetails.mobile}
                 error={errors.mobile ? true : false}
                 helperText={errors.mobile?.message}
                 onChange={(event) => handleChange(event, "mobile")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="position"
@@ -151,12 +186,13 @@ const JobForm = () => {
                 type="text"
                 variant="outlined"
                 {...register("position")}
+                value={employeeDetails.position}
                 error={errors.position ? true : false}
                 helperText={errors.position?.message}
                 onChange={(event) => handleChange(event, "position")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="experience"
@@ -165,12 +201,13 @@ const JobForm = () => {
                 type="number"
                 variant="outlined"
                 {...register("experience")}
+                value={employeeDetails.experience}
                 error={errors.experience ? true : false}
                 helperText={errors.experience?.message}
                 onChange={(event) => handleChange(event, "experience")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="startDate"
@@ -184,7 +221,7 @@ const JobForm = () => {
                 onChange={(event) => handleChange(event, "startDate")}
               />
             </Grid>
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={isDialog ? 12 : 6}>
               <TextField
                 fullWidth
                 id="file"
@@ -200,7 +237,7 @@ const JobForm = () => {
             </Grid>
             <Grid item xs={12}>
               <Button type="submit" onClick={handleFormSubmit}>
-                Submit
+                {(operation = "edit" ? "Edit" : "Submit")}
               </Button>
             </Grid>
           </Grid>

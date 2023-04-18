@@ -11,11 +11,13 @@ import {
   Select,
   TextField,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import * as yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import AppointmentService from "../../Services/appointmentServices";
+import { useNavigate } from "react-router-dom";
+import { errorToast, successToast } from "../../Toast/Toast";
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
 const MenuProps = {
@@ -54,7 +56,13 @@ const userSchema = yup.object({
   slot: yup.string().required(),
 });
 
-const EnquiryForm = () => {
+const AppointmentForm = ({
+  operation,
+  appointmentList,
+  handleDialogClose,
+  selectedAppointment,
+  isDialog = false,
+}) => {
   const [userData, setUserData] = useState({
     firstName: "",
     lastName: "",
@@ -74,6 +82,17 @@ const EnquiryForm = () => {
     resolver: yupResolver(userSchema),
   });
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (appointmentList?.length && selectedAppointment) {
+      const selectedUser = appointmentList?.find(
+        (user) => user._id === selectedAppointment
+      );
+      setUserData(selectedUser);
+    }
+  }, [selectedAppointment, appointmentList]);
+
   const handleChange = (event, inputName) => {
     const {
       target: { value },
@@ -86,16 +105,35 @@ const EnquiryForm = () => {
     setUserData({ ...userData, [inputName]: value });
   };
 
-  const handleFormSubmit = (e) => {
-    AppointmentService.createAppointment(userData)
-      .then((response) => {
-        const message = response?.data?.message || "Appointment Created";
-      })
-      .catch((err) => {
-        console.error(err);
-        const message =
-          err?.response?.data?.message || "Failed to create Appointment";
-      });
+  const handleFormSubmit = () => {
+    if ((operation = "edit")) {
+      AppointmentService.updateAppointment(
+        appointmentList?._id,
+        appointmentList
+      )
+        .then((response) => {
+          const message = response?.data?.message || "User Created";
+          successToast(message);
+          handleDialogClose();
+        })
+        .catch((err) => {
+          console.error(err);
+          const message = err?.response?.data?.message || "Failed to create";
+          errorToast(message);
+        });
+    } else {
+      AppointmentService.createAppointment(userData)
+        .then((response) => {
+          const message = response?.data?.message || "Appointment Created";
+        })
+        .catch((err) => {
+          console.error(err);
+          const message =
+            err?.response?.data?.message || "Failed to create Appointment";
+        });
+    }
+
+    navigate("/services");
   };
   console.log("UserData :", userData);
   return (
@@ -106,9 +144,9 @@ const EnquiryForm = () => {
           boxSizing: "border-box",
           borderRadius: 10,
           marginTop: "2%",
-          height: "80vh",
-          ml: "16%",
-          mr: "16%",
+          minHeight: "80vh",
+          margin: "2% 16% 0 16% ",
+
           backgroundImage:
             "url('https://images.pexels.com/photos/7130538/pexels-photo-7130538.jpeg?auto=compress&cs=tinysrgb&w=600')",
           backgroundRepeat: "no-repeat",
@@ -116,32 +154,55 @@ const EnquiryForm = () => {
         }}
       >
         <h1
-          style={{
-            fontFamily: "'BadScript-Regular', sans-serif",
+          style={
+            isDialog
+              ? {
+                  fontFamily: "'BadScript-Regular', sans-serif",
+                  fontSize: "25px",
+                  paddingLeft: "20%",
+                  marginTop: "2%",
+                }
+              : {
+                  fontFamily: "'BadScript-Regular', sans-serif",
 
-            fontSize: "50px",
-          }}
+                  fontSize: { xs: "30px", md: "40px" },
+                  marginTop: "10px",
+                }
+          }
         >
-          Contact Us
+          Book Appointment
         </h1>
         <Box component="form" onSubmit={handleSubmit(handleFormSubmit)}>
           <Grid container>
-            <Grid md={5} sx={{ fontFamily: "'BadScript-Regular', sans-serif" }}>
-              <Grid item sx={{ fontSize: 24 }}>
-                <h3 style={{ color: "palegreen" }}>OPENING HOURS</h3>
-                <p style={{ color: "red" }}>Mon - Fri: 7am - 10pm</p>
-                <p style={{ color: "red" }}>Saturday: 8am - 10pm</p>
-                <p style={{ color: "red" }}>​Sunday: 8am - 11pm</p>
+            {!isDialog && (
+              <Grid
+                md={5}
+                sx={{
+                  fontFamily: "'BadScript-Regular', sans-serif",
+                  display: { xs: "none", md: "block" },
+                }}
+              >
+                <Grid item sx={{ fontSize: 24 }}>
+                  <h3 style={{ color: "palegreen" }}>OPENING HOURS</h3>
+                  <p style={{ color: "red" }}>Mon - Fri: 7am - 10pm</p>
+                  <p style={{ color: "red" }}>Saturday: 8am - 10pm</p>
+                  <p style={{ color: "red" }}>​Sunday: 8am - 11pm</p>
+                </Grid>
+                <Grid item sx={{ fontSize: 20 }}>
+                  <h3 style={{ color: "magenta" }}>OUR ADDRESS</h3>
+                  <p>500 Terry Francine Street</p>
+                  <p>San Francisco, CA 94158</p>
+                  <p>Tel: 123-456-7890</p>
+                </Grid>
               </Grid>
-              <Grid item sx={{ fontSize: 20 }}>
-                <h3 style={{ color: "magenta" }}>OUR ADDRESS</h3>
-                <p>500 Terry Francine Street</p>
-                <p>San Francisco, CA 94158</p>
-                <p>Tel: 123-456-7890</p>
-              </Grid>
-            </Grid>
-            <Grid container md={7} sx={{ mt: 1 }}>
-              <Grid item md={6}>
+            )}
+            <Grid
+              container
+              md={7}
+              sx={isDialog ? { paddingLeft: "20%" } : { mt: 1 }}
+              xs={12}
+            >
+              <Grid item xs={12} md={isDialog ? 12 : 6}>
                 <TextField
                   id="firstName"
                   label="First Name"
@@ -151,9 +212,10 @@ const EnquiryForm = () => {
                   error={errors.firstName ? true : false}
                   helperText={errors.firstName?.message}
                   onChange={(event) => handleChange(event, "firstName")}
+                  value={userData?.firstName || ""}
                 />
               </Grid>
-              <Grid item md={6}>
+              <Grid item xs={12} md={isDialog ? 12 : 6}>
                 <TextField
                   id="lastName"
                   label="Last Name"
@@ -163,9 +225,10 @@ const EnquiryForm = () => {
                   error={errors.lastName ? true : false}
                   helperText={errors.lastName?.message}
                   onChange={(event) => handleChange(event, "lastName")}
+                  value={userData?.lastName || ""}
                 />
               </Grid>
-              <Grid item md={6}>
+              <Grid item xs={12} md={isDialog ? 12 : 6}>
                 <TextField
                   id="email"
                   label="Email"
@@ -175,9 +238,10 @@ const EnquiryForm = () => {
                   error={errors.email ? true : false}
                   helperText={errors.email?.message}
                   onChange={(event) => handleChange(event, "email")}
+                  value={userData?.email || ""}
                 />
               </Grid>
-              <Grid item md={6}>
+              <Grid item xs={12} md={isDialog ? 12 : 6}>
                 <TextField
                   id="mobile"
                   label="Mobile"
@@ -187,11 +251,14 @@ const EnquiryForm = () => {
                   error={errors.mobile ? true : false}
                   helperText={errors.mobile?.message}
                   onChange={(event) => handleChange(event, "mobile")}
+                  value={userData?.mobile || ""}
                 />
               </Grid>
 
               <Grid item md={12}>
-                <FormControl sx={{ m: 1, width: 300 }}>
+                <FormControl
+                  sx={isDialog ? { width: 200 } : { m: 1, width: 300 }}
+                >
                   <InputLabel id="services">Services</InputLabel>
                   <Select
                     labelId="services"
@@ -214,21 +281,23 @@ const EnquiryForm = () => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item md={6}>
+              <Grid item xs={12} md={isDialog ? 12 : 6}>
                 <TextField
                   id="date"
                   label="Date"
                   type="date"
                   variant="standard"
                   onChange={(event) => handleChange(event, "date")}
+                  value={userData?.date}
                 />
               </Grid>
-              <Grid md={6}>
+              <Grid xs={12} md={isDialog ? 12 : 6}>
                 <FormControl sx={{ m: 1, width: 200 }}>
                   <InputLabel htmlFor="slot">Select Slot</InputLabel>
                   <Select
                     native
                     defaultValue=""
+                    value={userData?.slot}
                     id="slot"
                     label="Slot"
                     {...register("slot")}
@@ -250,15 +319,16 @@ const EnquiryForm = () => {
               </Grid>
               <Grid item sx={{ ml: "40%" }}>
                 <Button variant="outlined" color="error" type="submit">
-                  Book Now
+                  {(operation = "edit" ? "Edit " : "Book")}
                 </Button>
               </Grid>
             </Grid>
           </Grid>
         </Box>
       </Box>
+      )
     </section>
   );
 };
 
-export default EnquiryForm;
+export default AppointmentForm;

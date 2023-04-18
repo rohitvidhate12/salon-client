@@ -9,10 +9,10 @@ import Career from "../Career/career";
 import SignIn from "../Login/signIn";
 import RegistrationForm from "../Login/RegistrationForm";
 import JobForm from "../Career/JobForm";
-import EnquiryForm from "../BookAppointment/EnquiryForm";
 import AppointmentData from "../../AdminPanel/AppointmentData";
 import EmployersData from "../../AdminPanel/EmployersData";
 import RegisteredUsers from "../../AdminPanel/RegisteredUsers";
+import AppointmentForm from "../BookAppointment/AppointmentForm";
 
 const Dashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -79,7 +79,7 @@ const Dashboard = () => {
           path="/book-appointment"
           element={
             <ProtectedRoute>
-              <EnquiryForm />
+              <AppointmentForm />
             </ProtectedRoute>
           }
         />

@@ -12,20 +12,20 @@ const OurServices = () => {
   const responsive = {
     superLargeDesktop: {
       breakpoint: { max: 4000, min: 3000 },
-      items: 5,
+      items: 4,
     },
     desktop: {
       breakpoint: { max: 3000, min: 1401 },
-      items: 4,
+      items: 3,
     },
 
     xLarge: {
       breakpoint: { max: 1400, min: 1201 },
-      items: 3,
+      items: 2,
     },
     large: {
       breakpoint: { max: 1200, min: 993 },
-      items: 3,
+      items: 2,
     },
     medium: {
       breakpoint: { max: 992, min: 769 },
@@ -46,7 +46,12 @@ const OurServices = () => {
       <Container fluid style={{ marginTop: "20px" }}>
         <Container>
           <Row>
-            <Carousel responsive={responsive}>
+            <Carousel
+              responsive={responsive}
+              autoPlaySpeed={1000}
+              infinite={true}
+              autoPlay={true}
+            >
               <Col
                 style={{
                   padding: "15px",
@@ -115,7 +120,7 @@ const OurServices = () => {
                   <h5 style={{ marginBottom: "15px" }}>Manicures</h5>
                   <p style={{ paddingLeft: "20px", paddingRight: "20px" }}>
                     Manicure involves grooming and painting the nails, often
-                    including shaping, buffing, and cuticle care.
+                    including shaping, buffing, and cuticle care of nails.
                   </p>
 
                   <Button
@@ -203,6 +208,91 @@ const OurServices = () => {
                   <p style={{ paddingLeft: "20px", paddingRight: "20px" }}>
                     Hair treatments such as cuts and colorings are some of the
                     most common salon services.Pretty much famous.
+                  </p>
+
+                  <Button
+                    style={{
+                      marginBottom: "15px",
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
+                      backgroundColor: "black",
+                      color: "white",
+                      borderColor: "gold",
+                    }}
+                  >
+                    Book Now
+                  </Button>
+                </Paper>
+              </Col>
+              <Col
+                style={{
+                  padding: "15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Paper elevation={6}>
+                  <Image
+                    fluid
+                    rounded="20%"
+                    src="Images/HairColoring.webp"
+                    style={{
+                      height: "50vh",
+                      width: "40vh",
+                      marginBottom: "15px",
+                      marginTop: "15px",
+                    }}
+                  />
+
+                  <h5 style={{ marginBottom: "15px" }}>HairColoring</h5>
+                  <p style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+                    Hair coloring involves changing the color of hair using
+                    various techniques, such as highlights, lowlights, and
+                    all-over color.
+                  </p>
+
+                  <Button
+                    style={{
+                      marginBottom: "15px",
+                      paddingLeft: "15px",
+                      paddingRight: "15px",
+                      backgroundColor: "black",
+                      color: "white",
+                      borderColor: "gold",
+                    }}
+                  >
+                    Book Now
+                  </Button>
+                </Paper>
+              </Col>
+              <Col
+                style={{
+                  padding: "15px",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <Paper elevation={6}>
+                  <Image
+                    fluid
+                    rounded="20%"
+                    src="Images/FacialTreatments.jpg"
+                    style={{
+                      height: "50vh",
+                      width: "40vh",
+                      marginBottom: "15px",
+                      marginTop: "15px",
+                    }}
+                  />
+
+                  <h5 style={{ marginBottom: "15px" }}>Facial treatment</h5>
+                  <p style={{ paddingLeft: "20px", paddingRight: "20px" }}>
+                    Facial treatments involve deep-cleaning and moisturizing the
+                    face, often including the use of steam, masks, and massage.
                   </p>
 
                   <Button

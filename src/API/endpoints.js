@@ -22,6 +22,13 @@ export default {
       getOne: "/employees/",
       getAll: "/employees",
     },
+    enquiries: {
+      create: "/enquiries",
+      update: "/enquiries/",
+      delete: "/enquiries/",
+      getOne: "/enquiries/",
+      getAll: "/enquiries",
+    },
     auth: {
       adminLogin: "/auth/admin-login",
       validateToken: "/auth/validate-token",

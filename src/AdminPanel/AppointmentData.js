@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Swal from "sweetalert2";
 import { Box } from "@mui/material";
 import MuiDatatable from "mui-datatables";
+import EditAppointment from "./EditAppointment";
 const AppointmentData = () => {
   const defaultData = () => ({
     firstName: "",
@@ -22,6 +23,9 @@ const AppointmentData = () => {
   const [initialAppointments, setInitialAppointments] = useState();
   const [open, setOpen] = useState(false);
   const [operation, setOperation] = useState("edit");
+  const [selectedAppointment, setSelectedAppointment] = useState("");
+
+  const handleDialogClose = () => setOpen(false);
 
   // const addAppointment = () => {
   //   setOperation("add");
@@ -74,7 +78,7 @@ const AppointmentData = () => {
   const columns = [
     {
       label: "ID",
-      name: "userId",
+      name: "_id",
     },
     {
       label: "Name",
@@ -116,9 +120,6 @@ const AppointmentData = () => {
       options: {
         sort: false,
         filter: true,
-        // customBodyRender: (status) => {
-        //   return status == 1 ? "8AM to 10AM" : "10AM to 12AM";
-        // },
       },
     },
     {
@@ -148,11 +149,23 @@ const AppointmentData = () => {
   ];
   return (
     <>
+      <EditAppointment
+        appointmentList={appointmentList}
+        open={open}
+        operation={operation}
+        handleDialogClose={handleDialogClose}
+        selectedAppointment={selectedAppointment}
+      />
       <Box>
         <MuiDatatable
           title="Appointments List"
           columns={columns}
           data={appointmentList}
+          options={{
+            onRowClick: (roWData, { rowIndex, dataIndex }) => {
+              setSelectedAppointment(roWData[0]);
+            },
+          }}
         />
       </Box>
     </>

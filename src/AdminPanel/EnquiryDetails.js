@@ -5,35 +5,34 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import UserService from "../Services/userServices";
-import EditRegisteredUsers from "./EditRegisteredUser";
-const RegisteredUsers = () => {
-  const defaultUser = () => ({
+import EnquiryService from "../Services/enquiryServices";
+const EnquiryDetails = () => {
+  const defaultEnquiry = () => ({
     firstName: "",
     lastName: "",
     email: "",
     mobile: "",
-    role: "admin",
+    subject: "",
+    message: "",
   });
 
-  const [userList, setUserList] = useState([]);
-  const [initialUser, setInitialUser] = useState();
+  const [enquiries, setEnquiries] = useState([]);
+  const [initialEnquiry, setInitialEnquiry] = useState();
   const [open, setOpen] = useState(false);
   const [operation, setOperation] = useState("edit");
-  const [selectedUserToEdit, setSelectedUserToEdit] = useState("");
-  const handleDialogClose = () => setOpen(false);
 
-  // const addUser = () => {
+  // const addEnquiry = () => {
   //   setOperation("add");
-  //   setInitialUser(defaultUser());
+  //   setInitialEnquiry(defaultEnquiry());
   //   setOpen(true);
   // };
 
-  const editUser = (user) => {
-    setOperation("edit");
-    setInitialUser(user);
-    setOpen(true);
-  };
-  const deleteUser = (id) => {
+  // const editEnquiry = (user) => {
+  //   setOperation("edit");
+  //   setInitialEnquiry(user);
+  //   setOpen(true);
+  // };
+  const deleteEnquiry = (id) => {
     Swal.fire({
       title: "Are you sure?",
       text: "You won't be able to revert this!",
@@ -44,10 +43,10 @@ const RegisteredUsers = () => {
       confirmButtonText: "Yes, delete it!",
     }).then((result) => {
       if (result.isConfirmed) {
-        UserService.deleteUser(id)
+        EnquiryService.deleteEnquiry(id)
           .then((response) => {
             Swal.fire("Deleted!", "User has been deleted.", "success");
-            loadUsers();
+            loadEnquiries();
           })
           .catch((err) => {
             console.error(err);
@@ -61,19 +60,19 @@ const RegisteredUsers = () => {
     });
   };
 
-  const loadUsers = async () => {
-    const response = await UserService.fetchAllUser();
-    if (response?.data) setUserList(response.data?.data);
+  const loadEnquiries = async () => {
+    const response = await EnquiryService.fetchAllEnquiry();
+    if (response?.data) setEnquiries(response.data?.data);
   };
 
   useEffect(() => {
-    loadUsers();
+    loadEnquiries();
   }, []);
 
   const columns = [
     {
       label: "ID",
-      name: "_id",
+      name: "userId",
     },
     {
       label: "Name",
@@ -82,7 +81,7 @@ const RegisteredUsers = () => {
         sort: true,
         filter: false,
         customBodyRenderLite: (index) => {
-          const user = userList[index];
+          const user = enquiries[index];
 
           return `${user?.firstName} ${user?.lastName}`;
         },
@@ -104,6 +103,22 @@ const RegisteredUsers = () => {
         filter: false,
       },
     },
+    {
+      label: "Subject",
+      name: "subject",
+      options: {
+        sort: false,
+        filter: false,
+      },
+    },
+    {
+      label: "Message",
+      name: "info",
+      options: {
+        sort: false,
+        filter: false,
+      },
+    },
 
     {
       label: "Action",
@@ -112,13 +127,16 @@ const RegisteredUsers = () => {
         sort: false,
         filter: false,
         customBodyRenderLite: (index) => {
-          const user = userList[index];
+          const user = enquiries[index];
           return (
             <>
-              <IconButton color="primary" onClick={() => editUser(user)}>
+              {/* <IconButton color="primary" onClick={() => editEnquiry(user)}>
                 <EditIcon />
-              </IconButton>
-              <IconButton color="error" onClick={() => deleteUser(user?._id)}>
+              </IconButton> */}
+              <IconButton
+                color="error"
+                onClick={() => deleteEnquiry(user?._id)}
+              >
                 <DeleteIcon />
               </IconButton>
             </>
@@ -130,27 +148,15 @@ const RegisteredUsers = () => {
 
   return (
     <>
-      <EditRegisteredUsers
-        open={open}
-        handleDialogClose={handleDialogClose}
-        operation={operation}
-        selectedUserToEdit={selectedUserToEdit}
-        userList={userList}
-      />
       <Box>
         <MuiDatatable
           title="Registered Users List"
           columns={columns}
-          data={userList}
-          options={{
-            onRowClick: (roWData, { rowIndex, dataIndex }) => {
-              setSelectedUserToEdit(roWData[0]);
-            },
-          }}
+          data={enquiries}
         />
       </Box>
     </>
   );
 };
 
-export default RegisteredUsers;
+export default EnquiryDetails;

@@ -14,6 +14,9 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../Services/authServices";
+import { errorToast } from "../../Toast/Toast";
+import { useDispatch } from "react-redux";
+import { addUser } from "../../store/slices/authSlice";
 
 function Copyright(props) {
   return (
@@ -28,7 +31,6 @@ function Copyright(props) {
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
-      {"."}
     </Typography>
   );
 }
@@ -37,6 +39,7 @@ const theme = createTheme();
 
 const SignIn = ({ setLoggedIn, isAuthenticated }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [user, setUser] = React.useState({
     email: "",
@@ -60,7 +63,7 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
     console.log({ user });
 
     let responsePro;
-    if (type == "admin") {
+    if ("admin") {
       //admin
       responsePro = AuthService.adminLogin(user);
     } else {
@@ -72,6 +75,8 @@ const SignIn = ({ setLoggedIn, isAuthenticated }) => {
       .then((response) => {
         console.log("Response :", response);
         // save the user data to redux store
+
+        console.log("Server response for", response?.data?.data);
 
         if (response?.data?.data) {
           dispatch(addUser(response?.data?.data));
